@@ -49,50 +49,68 @@ export function HeroBackgroundVideo({ src, poster }: HeroBackgroundVideoProps) {
     }
   }, [])
 
-  /* ── Video event listeners ──────────────────────────────────────────────── */
+  /* ── Video event listeners + explicit play ─────────────────────────────── */
   useEffect(() => {
     const video = videoRef.current
     if (!video || reducedMotion) return
 
     /**
-     * Seamless loop — resets currentTime slightly before the natural loop
-     * point to prevent the 1-frame white/black flash some browsers show.
+     * Explicitly call play() — the HTML autoplay attribute is unreliable after
+     * React hydration on mobile browsers (iOS Safari, Android Chrome). Calling
+     * play() in JS guarantees autoplay once the element is ready.
+     */
+    const tryPlay = () => {
+      if (video.paused) {
+        video.play().catch(() => {
+          // Autoplay still blocked (e.g. data-saver mode) — poster stays visible
+        })
+      }
+    }
+
+    /**
+     * Seamless loop — resets currentTime slightly before the natural end
+     * to prevent the 1-frame flash some browsers show on the native loop.
      */
     const handleTimeUpdate = () => {
       if (video.duration && video.currentTime >= video.duration - 0.1) {
         video.currentTime = 0
-        // Re-trigger play in case the reset paused it on some browsers
-        video.play().catch(() => {})
+        tryPlay()
       }
     }
 
-    /** Fade the video in once the browser has enough data to play smoothly */
+    /** Start playing as soon as metadata (duration) is known — works on mobile
+     *  where canplaythrough may fire very late or not at all over slow networks. */
+    const handleLoadedMetadata = () => tryPlay()
+
+    /** Also try on canplay — whichever fires first wins */
+    const handleCanPlay = () => {
+      tryPlay()
+      setVideoReady(true)
+    }
+
     const handleCanPlayThrough = () => setVideoReady(true)
 
-    /**
-     * On any load error, keep videoReady=false so the poster stays visible.
-     * No console noise — this is an expected graceful fallback.
-     */
     const handleError = () => setVideoReady(false)
 
-    /**
-     * Some mobile browsers pause autoplay after the tab goes to background.
-     * Resume on visibility change.
-     */
     const handleVisibilityChange = () => {
-      if (!document.hidden && video.paused) {
-        video.play().catch(() => {})
-      }
+      if (!document.hidden && video.paused) tryPlay()
     }
 
-    video.addEventListener('timeupdate', handleTimeUpdate)
+    video.addEventListener('loadedmetadata', handleLoadedMetadata)
+    video.addEventListener('canplay', handleCanPlay)
     video.addEventListener('canplaythrough', handleCanPlayThrough)
+    video.addEventListener('timeupdate', handleTimeUpdate)
     video.addEventListener('error', handleError)
     document.addEventListener('visibilitychange', handleVisibilityChange)
 
+    // Fire immediately in case the video is already ready (cached)
+    tryPlay()
+
     return () => {
-      video.removeEventListener('timeupdate', handleTimeUpdate)
+      video.removeEventListener('loadedmetadata', handleLoadedMetadata)
+      video.removeEventListener('canplay', handleCanPlay)
       video.removeEventListener('canplaythrough', handleCanPlayThrough)
+      video.removeEventListener('timeupdate', handleTimeUpdate)
       video.removeEventListener('error', handleError)
       document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
@@ -139,7 +157,7 @@ export function HeroBackgroundVideo({ src, poster }: HeroBackgroundVideoProps) {
         playsInline
         disablePictureInPicture
         // Not setting controls prop = no controls rendered (React omits false booleans)
-        preload={isMobile ? 'metadata' : 'auto'}
+        preload="auto"
         poster={poster}
         aria-hidden="true"
         style={{
