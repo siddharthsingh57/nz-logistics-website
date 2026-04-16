@@ -1,0 +1,220 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Design Tokens ─────────────────────────────────────────────────────── */
+/*
+ * Colors are stored as RGB channel triplets so Tailwind's opacity modifier
+ * (e.g. bg-primary/50, text-accent/80) works correctly.
+ * Direct CSS usage: rgb(var(--primary))
+ * Tailwind config:  rgb(var(--primary) / <alpha-value>)
+ */
+:root {
+  --bg: 244 241 235;          /* #F4F1EB — warm off-white */
+  --bg-alt: 237 233 224;      /* #EDE9E0 */
+  --surface: 255 255 255;     /* #ffffff */
+  --primary: 44 74 62;        /* #2C4A3E — deep forest green */
+  --primary-dark: 26 46 38;   /* #1A2E26 */
+  --primary-light: 61 101 83; /* #3D6553 */
+  --accent: 196 98 45;        /* #C4622D — burnt orange */
+  --accent-hover: 168 81 31;  /* #A8511F */
+  --ocean: 27 77 110;         /* #1B4D6E — pacific blue */
+  --ink: 26 26 24;            /* #1A1A18 — warm near-black */
+  --muted: 107 100 86;        /* #6B6456 — warm grey */
+  --border-color: rgb(26 26 24 / 0.10);
+}
+
+/* ─── Base Reset ─────────────────────────────────────────────────────────── */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+  }
+
+  body {
+    background-color: rgb(var(--bg));
+    color: rgb(var(--ink));
+    font-family: var(--font-sans), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display), Georgia, serif;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  h4, h5, h6 {
+    font-family: var(--font-sans), system-ui, sans-serif;
+    line-height: 1.3;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img, svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: inherit;
+  }
+}
+
+/* ─── Topographic Texture ────────────────────────────────────────────────── */
+/*
+  Subtle contour lines evoke NZ's dramatic terrain.
+  Applied as a background pattern on select sections.
+*/
+.topo-texture {
+  position: relative;
+}
+
+.topo-texture::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='320'%3E%3Cellipse cx='240' cy='160' rx='220' ry='95' fill='none' stroke='rgba(44%2C74%2C62%2C0.065)' stroke-width='1'/%3E%3Cellipse cx='240' cy='160' rx='175' ry='72' fill='none' stroke='rgba(44%2C74%2C62%2C0.065)' stroke-width='1'/%3E%3Cellipse cx='240' cy='160' rx='130' ry='52' fill='none' stroke='rgba(44%2C74%2C62%2C0.065)' stroke-width='1'/%3E%3Cellipse cx='240' cy='160' rx='85' ry='34' fill='none' stroke='rgba(44%2C74%2C62%2C0.065)' stroke-width='1'/%3E%3Cellipse cx='240' cy='160' rx='42' ry='16' fill='none' stroke='rgba(44%2C74%2C62%2C0.065)' stroke-width='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 480px 320px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.topo-texture > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── Utilities ──────────────────────────────────────────────────────────── */
+@layer utilities {
+  /* Link underline sweep — hover triggers a left-origin scale */
+  .link-sweep {
+    position: relative;
+    display: inline-block;
+  }
+
+  .link-sweep::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: rgb(var(--accent));
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .link-sweep:hover::after,
+  .link-sweep[aria-current='page']::after {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+
+  /* Text balance for headlines */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Number count-up shimmer */
+  .stat-number {
+    font-family: var(--font-display), Georgia, serif;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.04em;
+  }
+
+  /* Full-bleed section helpers */
+  .section-padding {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+  }
+
+  @media (min-width: 1024px) {
+    .section-padding {
+      padding-top: 9rem;
+      padding-bottom: 9rem;
+    }
+  }
+}
+
+/* ─── Custom Scrollbar ───────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--bg-alt));
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--primary-light));
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--primary));
+}
+
+/* ─── Reduced Motion ─────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─── Hero gradient animation ────────────────────────────────────────────── */
+.hero-gradient-mesh {
+  background: linear-gradient(
+    135deg,
+    rgb(var(--primary-dark)) 0%,
+    rgb(var(--primary)) 35%,
+    rgb(var(--primary-light)) 65%,
+    rgb(var(--ocean)) 100%
+  );
+  background-size: 300% 300%;
+  animation: gradientShift 10s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
+
+/* ─── SVG line-draw ──────────────────────────────────────────────────────── */
+.svg-draw {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: lineDraw 2.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes lineDraw {
+  to { stroke-dashoffset: 0; }
+}
