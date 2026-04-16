@@ -3,12 +3,13 @@
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Truck, Warehouse, PackageCheck, Thermometer, FileCheck, ArrowRight } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { SITE } from '@/content/site'
 import { Container } from '@/components/ui/Container'
 import { fadeUp, staggerContainer, EXPO_OUT } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 
-const ICON_MAP: Record<string, React.ComponentType<{ size?: number; strokeWidth?: number; className?: string }>> = {
+const ICON_MAP: Record<string, LucideIcon> = {
   Truck,
   Warehouse,
   PackageCheck,

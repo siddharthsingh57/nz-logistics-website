@@ -11,6 +11,7 @@ import {
   Check,
   ArrowRight,
 } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { SITE, SERVICES_DETAIL } from '@/content/site'
 import { Container } from '@/components/ui/Container'
 import { Button } from '@/components/ui/Button'
@@ -18,7 +19,7 @@ import { fadeUp, staggerContainer, EXPO_OUT } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 
 /* ─── Icon map ───────────────────────────────────────────────────────────── */
-const ICON_MAP: Record<string, React.ComponentType<{ size?: number; strokeWidth?: number; className?: string }>> = {
+const ICON_MAP: Record<string, LucideIcon> = {
   Truck,
   Warehouse,
   PackageCheck,

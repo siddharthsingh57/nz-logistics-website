@@ -9,10 +9,8 @@ import '@/styles/globals.css'
 /* ─── Fonts ──────────────────────────────────────────────────────────────── */
 const fraunces = Fraunces({
   subsets: ['latin'],
-  axes: ['opsz', 'SOFT', 'WONK'],
   variable: '--font-display',
   display: 'swap',
-  // Using light–regular weight range for the editorial look
   weight: ['300', '400'],
 })
 
