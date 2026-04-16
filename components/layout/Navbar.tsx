@@ -47,7 +47,13 @@ export function Navbar() {
             {/* Logo */}
             <Link
               href="/"
-              className="font-display text-[1.15rem] font-light text-primary tracking-tight leading-none hover:opacity-80 transition-opacity"
+              className={cn(
+                'font-display tracking-tight leading-none transition-all duration-500',
+                'text-xl md:text-2xl',
+                scrolled
+                  ? 'font-light text-primary hover:opacity-75'
+                  : 'font-normal text-white hover:text-white/85 drop-shadow-[0_1px_16px_rgba(0,0,0,0.55)]'
+              )}
             >
               {SITE.name}
             </Link>
@@ -60,10 +66,12 @@ export function Navbar() {
                   href={item.href}
                   aria-current={pathname === item.href ? 'page' : undefined}
                   className={cn(
-                    'link-sweep font-sans text-sm font-medium transition-colors duration-300',
+                    'link-sweep font-sans text-sm font-medium transition-colors duration-500',
                     pathname === item.href
                       ? 'text-accent'
-                      : 'text-ink/65 hover:text-ink'
+                      : scrolled
+                        ? 'text-ink/65 hover:text-ink'
+                        : 'text-white/75 hover:text-white'
                   )}
                 >
                   {item.label}
@@ -89,7 +97,10 @@ export function Navbar() {
             {/* Mobile hamburger */}
             <button
               onClick={() => setMobileOpen((v) => !v)}
-              className="md:hidden p-2 -mr-2 text-ink hover:text-accent transition-colors"
+              className={cn(
+                'md:hidden p-2 -mr-2 transition-colors duration-500',
+                scrolled ? 'text-ink hover:text-accent' : 'text-white hover:text-white/70'
+              )}
               aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileOpen}
             >

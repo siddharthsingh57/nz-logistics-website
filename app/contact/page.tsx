@@ -116,8 +116,12 @@ export default function ContactPage() {
       </AnimatePresence>
 
       {/* ─── Page hero ─────────────────────────────────────────────────── */}
-      <section className="relative pt-36 pb-20 bg-bg topo-texture overflow-hidden">
-        <Container>
+      <section className="relative pt-36 pb-20 bg-primary-dark overflow-hidden">
+        {/* Subtle topo texture */}
+        <div className="absolute inset-0 opacity-15 pointer-events-none topo-texture" />
+        {/* Depth gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-black/30 via-transparent to-primary/20 pointer-events-none" />
+        <Container className="relative z-10">
           <motion.div
             variants={staggerContainer(0.09, 0.2)}
             initial="hidden"
@@ -127,16 +131,16 @@ export default function ContactPage() {
             <motion.nav
               variants={fadeUp()}
               aria-label="Breadcrumb"
-              className="flex items-center gap-2 text-xs font-sans text-muted/60 mb-6"
+              className="flex items-center gap-2 text-xs font-sans text-white/40 mb-6"
             >
-              <Link href="/" className="hover:text-ink transition-colors">Home</Link>
+              <Link href="/" className="hover:text-white/70 transition-colors">Home</Link>
               <span>/</span>
-              <span className="text-muted/80">Contact</span>
+              <span className="text-white/60">Contact</span>
             </motion.nav>
 
             <motion.span
               variants={fadeUp(0.04)}
-              className="inline-flex items-center gap-2 font-sans text-xs font-semibold uppercase tracking-[0.14em] text-accent/80 mb-4"
+              className="inline-flex items-center gap-2 font-sans text-xs font-semibold uppercase tracking-[0.14em] text-accent/90 mb-4"
             >
               <span className="w-6 h-px bg-accent/50" />
               {contact.eyebrow}
@@ -144,7 +148,7 @@ export default function ContactPage() {
 
             <motion.h1
               variants={fadeUp(0.08)}
-              className="font-display text-4xl md:text-5xl lg:text-6xl font-light text-ink tracking-tight leading-[1.08]"
+              className="font-display text-4xl md:text-5xl lg:text-6xl font-light text-white tracking-tight leading-[1.08]"
               style={{ whiteSpace: 'pre-line' }}
             >
               {contact.headline}
@@ -152,7 +156,7 @@ export default function ContactPage() {
 
             <motion.p
               variants={fadeUp(0.12)}
-              className="font-sans text-base text-muted leading-relaxed mt-5 max-w-[400px]"
+              className="font-sans text-base text-white/60 leading-relaxed mt-5 max-w-[400px]"
             >
               {contact.body}
             </motion.p>

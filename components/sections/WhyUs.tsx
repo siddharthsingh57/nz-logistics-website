@@ -6,6 +6,7 @@ import { CheckCircle2 } from 'lucide-react'
 import { SITE } from '@/content/site'
 import { Container } from '@/components/ui/Container'
 import { fadeUp, staggerContainer, EXPO_OUT } from '@/lib/utils'
+import { FloatingPaths } from '@/components/ui/background-paths'
 
 /* ─── Count-up hook ──────────────────────────────────────────────────────── */
 function useCountUp(target: string, duration = 1800) {
@@ -65,11 +66,19 @@ export function WhyUs() {
   const { whyUs, stats } = SITE
 
   return (
-    <section className="section-padding bg-primary relative overflow-hidden topo-texture">
-      {/* Topo texture already applied via class; add extra depth gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary-dark/60 via-transparent to-primary-light/20 pointer-events-none" />
+    <section className="section-padding bg-primary relative overflow-hidden">
 
-      <Container className="relative">
+      {/* ── FloatingPaths animated background ─────────────────────────────── */}
+      {/* Two mirrored layers of animated SVG curves in white — very subtle */}
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-100">
+        <FloatingPaths position={1}  color="rgba(255,255,255,1)" />
+        <FloatingPaths position={-1} color="rgba(255,255,255,1)" />
+      </div>
+
+      {/* Depth gradient on top of the paths — keeps content readable */}
+      <div className="absolute inset-0 z-[1] bg-gradient-to-br from-primary-dark/55 via-transparent to-primary-light/15 pointer-events-none" />
+
+      <Container className="relative z-[2]">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-16 lg:gap-20 items-start">
 
           {/* ─── Left — headline & differentiators ──────────────────────── */}
